@@ -24,6 +24,14 @@ def num_eights(n):
     ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'For', 'While'])
     True
     """
+    if n == 8:
+        return 1
+    elif n < 10:
+        return 0
+    elif n % 10 == 8:
+        return 1 + num_eights(n // 10)
+    else:
+        return num_eights(n // 10)
     "*** YOUR CODE HERE ***"
 
 
@@ -46,6 +54,10 @@ def digit_distance(n):
     ...       ['For', 'While'])
     True
     """
+    if n < 10:
+        return 0
+    else:
+        return abs(n % 10 - (n // 10 % 10)) + digit_distance(n // 10)
     "*** YOUR CODE HERE ***"
 
 
@@ -70,6 +82,14 @@ def interleaved_sum(n, odd_func, even_func):
     >>> check(HW_SOURCE_FILE, 'interleaved_sum', ['BitAnd', 'BitOr', 'BitXor']) # ban bitwise operators, don't worry about these if you don't know what they are
     True
     """
+    def f(x):
+        if x == n:
+            return odd_func(x)
+        elif x + 1 == n:
+            return odd_func(x) + even_func(x + 1)
+        else:
+            return odd_func(x) + even_func(x + 1) + f(x + 2)
+    return f(1)
     "*** YOUR CODE HERE ***"
 
 
@@ -106,6 +126,16 @@ def count_dollars(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars', ['While', 'For'])
     True
     """
+    def f(limit, now = 100):
+        if limit == 0:
+            return 1
+        ans = 0
+        if limit >= now:
+            ans += f(limit - now, now)
+        if next_smaller_dollar(now) != None:
+            ans += f(limit, next_smaller_dollar(now))
+        return ans
+    return f(total)
     "*** YOUR CODE HERE ***"
 
 
@@ -142,6 +172,16 @@ def count_dollars_upward(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars_upward', ['While', 'For'])
     True
     """
+    def f(limit, now = 1):
+        if limit == 0:
+            return 1
+        ans = 0
+        if limit >= now:
+            ans += f(limit - now, now)
+        if next_larger_dollar(now) != None:
+            ans += f(limit, next_larger_dollar(now))
+        return ans
+    return f(total)
     "*** YOUR CODE HERE ***"
 
 
@@ -177,6 +217,13 @@ def move_stack(n, start, end):
     Move the top disk from rod 1 to rod 3
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
+    other = 6 - start - end
+    if n == 1:
+        print_move(start, end)
+    else:
+        move_stack(n - 1, start, other)
+        print_move(start, end)
+        move_stack(n - 1, other, end)
     "*** YOUR CODE HERE ***"
 
 
@@ -193,5 +240,5 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
-
+    # return lambda x : 1 if x == 1 else 
+    return (lambda f : f(f))(lambda f : lambda n: 1 if n == 1 else mul(n, f(f)(sub(n, 1))))
